@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fort Search Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Segoe UI, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f2f2f2;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        @media (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            th {
+                text-align: left;
+                background-color: #4CAF50;
+            }
+
+            td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 12px;
+                text-align: left;
+                font-weight: bold;
+            }
+        }
+        #back {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<button id="back" onclick="back()">Back -></button>
+<button onclick="downloadFortResults()" id="back">Download Forts as PDF</button>
+<div class="container" id="fortPdfArea">
+        {% if fortss %}
+        <h2>Search Results</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>Level</th>
+                    <th>Hits Remaining</th>
+                    <th>Distance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fort in fortss %}
+                    <tr>
+                        <td colspan="5">
+                            <strong>
+                                {{ "Level 80" if fort[0][2] == 9 else "Level 70" if fort[0][2] == 8 else "Level 60" }}
+                            </strong>
+                        </td>
+                    </tr>
+                    {% for data in fort %}
+                    <tr>
+                        <td data-label="X">{{ data[0] }}</td>
+                        <td data-label="Y">{{ data[1] }}</td>
+                        <td data-label="Level">{{ "Level 80" if data[2] == 9 else "Level 70" if data[2] == 8 else "Level 60" }} </td>
+                        <td data-label="Hits Rmaining">{{ (10 - data[3]) }}</td>
+                        <td data-label="Distance">{{ data[4] }}</td>
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No data found.</p>
+    {% endif %}
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+    function back() {
+        window.location.href = '/';
+    }
+
+    function downloadFortResults() {
+        const element = document.getElementById('fortPdfArea');
+        const opt = {
+            margin:       0.5,
+            filename:     'forts-search-results.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save();
+    }
+
+</script>
+
+</body>
+</html>
